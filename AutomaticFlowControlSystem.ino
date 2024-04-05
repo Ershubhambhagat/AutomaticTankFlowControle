@@ -1,122 +1,152 @@
-#include <NewPing.h>
-
-const int trigPin = 2; // Trigger Pin of Ultrasonic Sensor
-const int echoPin = 4;// Echo Pin of Ultrasonic Sensor
-const int relayPin = 7; //
+const int pingPin = 2; // Trigger Pin of Ultrasonic Sensor
+const int echoPin = 5;// Echo Pin of Ultrasonic Sensor
+const int relayPin = 8; //
 
 
-// Create NewPing object for ultrasonic sensor
-NewPing sonar(trigPin, echoPin);
 
-// Variables for water level, time intervals, and delays
-int waterLevel;
-int initialWaterLevel;
-unsigned long previousMillis = 0;
-//const long interval = 600000;      // 10 minutes in milliseconds
-const int pumpStartDelay = 5000;  // 10 seconds
-const long interval = 5000;      // 5 sec in milliseconds
-const int pumpOffDelay = 10000;    // 10 seconds
-const int measurementDelay = 10000; // 10 seconds
+int FirstWaterLableCheck;
+//const long interval = 300000;      // 5 minutes in milliseconds
+const long WaitForIncreaseWater =5000;  //5 sec  
+const long intervaloraginal = 300;      // 3 sec in milliseconds
+const long DeepSleep = 300;  
+const int OnMotor15 = 15;   // 15 FirstWaterLableCheck
+const int OffMotor10 = 10;  // 80 FirstWaterLableCheck
+const int SensorNotWorking35 = 35;
 
-// Define water level thresholds
-const int lowWaterThreshold = 10;   // 10 inches
-const int highWaterThreshold = 10;  // 80 inches
-const int stopPumpThreshold = 5;    // 5 inches
-
+ 
 void setup() {
-  // Initialize Serial Monitor
-  Serial.begin(9600);
-
-  // Set relay pin as output
   pinMode(relayPin, OUTPUT);
+  
+  Serial.begin(9600); // Starting Serial Terminal
 }
 
 void loop() {
-  // Measure initial water level using ultrasonic sensor
-  initialWaterLevel = sonar.ping_in();
-  Serial.println(initialWaterLevel +"==initialWaterLevel");
-
-  // Check if water level is already at or above the high water threshold
-  if (initialWaterLevel >= highWaterThreshold)//11>=10
+   long duration, WaterLevel1;
+   pinMode(pingPin, OUTPUT);
+   digitalWrite(pingPin, LOW);
+   delayMicroseconds(2);
+   digitalWrite(pingPin, HIGH);
+   delayMicroseconds(10);
+   digitalWrite(pingPin, LOW);
+   pinMode(echoPin, INPUT);
+   duration = pulseIn(echoPin, HIGH);
+   WaterLevel1 = microsecondsToInches(duration);
+   Serial.print("Top  Check:");
+   Serial.print(WaterLevel1);
+   Serial.print("inch");
+   Serial.println();
+   //delay(500);
+  if ( 10 >=WaterLevel1)// 10==>11
   {
-    // Turn off the pump
-    Serial.print("initialWaterLevel >= highWaterThreshold");
-    Serial.println();
-     Serial.print(initialWaterLevel +">="+ highWaterThreshold);
-     Serial.println();
     digitalWrite(relayPin, LOW);
-    delayWithCountdown(pumpOffDelay);
-  } else if (initialWaterLevel < stopPumpThreshold) 
-  {
-    Serial.print("initialWaterLevel < stopPumpThreshold");
+    Serial.print("Relay OFF water is already 10 inch" );
     Serial.println();
-    Serial.print(initialWaterLevel +"<"+ stopPumpThreshold);
-    // Start the pump
+    Serial.print("Now Lable is :"+WaterLevel1 );
+    Serial.println();
+  }
+ else if (WaterLevel1 >=SensorNotWorking35) ///36>=35
+  {
+    
+    Serial.println("Sensor Not Working");
+    Serial.println();
+    Serial.print("Going To Deep Sleep");
+    Serial.println();
+    //delay(DeepSleep);
+  }
+
+  // Pump On Logic 
+  else if ( OnMotor15 <= WaterLevel1 ) //15<24
+  {
+    long duration,WaterCheckAfterMin;
     digitalWrite(relayPin, HIGH);
-    delayWithCountdown(pumpStartDelay);
+    Serial.print("Relay On" );
+    Serial.println();
 
-    // Measure water level again after the delay
-    waterLevel = sonar.ping_in();
+    Serial.print("Low Water Level Going to Start Motor" );
+    Serial.println();
+   
+    Serial.print("Checkig ......" );
 
-    // If water level increased, continue pumping until the high water threshold
-    if (waterLevel > initialWaterLevel) 
+    Serial.println();
+    delay(WaitForIncreaseWater);//WaitForIncreaseWater
+    long WaterLevel1;
+   pinMode(pingPin, OUTPUT);
+   digitalWrite(pingPin, LOW);
+   delayMicroseconds(2);
+   digitalWrite(pingPin, HIGH);
+   delayMicroseconds(10);
+   digitalWrite(pingPin, LOW);
+   pinMode(echoPin, INPUT);
+   duration = pulseIn(echoPin, HIGH);
+   WaterCheckAfterMin = microsecondsToInches(duration);
+   Serial.print("New Water Lavel:- ");
+
+   Serial.print(WaterCheckAfterMin);
+  
+    Serial.println();
+   //delay(100);
+   if (WaterCheckAfterMin > WaterLevel1)
+   
+   {
+    Serial.print("Water not Increase after Min ");
+    Serial.println();
+
+    Serial.print("Motor Off Please ");
+    Serial.println();
+
+    Serial.print("Again Wait For Increase Water ");
+    Serial.println();
+
+   Serial.print(WaterCheckAfterMin);
+
+
+    delay(WaitForIncreaseWater);//WaitForIncreaseWater
+
+
+    
+   }
+   else if (WaterCheckAfterMin < WaterLevel1) //18<28 , 13<30
+      {
+    Serial.print("Water Increase after Min ");
+    Serial.println();
+    long duration, WaterCheckAfterMin;//18>10
+    while (WaterCheckAfterMin >= OffMotor10)//23>10 ,13>10,17>10
     {
-      
-       Serial.print("waterLevel > initialWaterLevel");
-       Serial.println();
-       Serial.print(waterLevel+">"+  initialWaterLevel);
-       Serial.println();
-      while (waterLevel < highWaterThreshold) {
-        // Print water level and relay status
-        Serial.print("waterLevel < highWaterThreshold(5)");
-       Serial.print(waterLevel+"<" + highWaterThreshold);
-        printStatus();
-        // Measure water level
-        waterLevel = sonar.ping_in();
-        delayWithCountdown(measurementDelay);
-      }
+
+      pinMode(pingPin, OUTPUT);
+      delayMicroseconds(2);
+      digitalWrite(pingPin, HIGH);
+      digitalWrite(pingPin, LOW);
+      delayMicroseconds(10);
+      pinMode(echoPin, INPUT);
+      duration = pulseIn(echoPin, HIGH);
+      WaterCheckAfterMin = microsecondsToInches(duration);
+      Serial.print(WaterCheckAfterMin);
+      Serial.print("inch");
+      Serial.println();
+     // delay(500);
+      Serial.print("IN WHILE LOOP:-");
+      Serial.println();
     }
-
-    // If water level dropped to the stop pump threshold, turn off the pump
-    if (waterLevel <= stopPumpThreshold) {
-      digitalWrite(relayPin, LOW);
-    } else {
-      // Otherwise, turn off the pump after 10 minutes
-      delayWithCountdown(pumpOffDelay);
-      digitalWrite(relayPin, LOW);
-    }
+      }   
   }
+  
+  else
+  {
+    Serial.print("Else ..........");
+    Serial.println();
 
-  // Print water level and relay status
-  printStatus();
+    Serial.print("Tank is Full or Water Not Increase:= ");
+    Serial.println();
+
+    digitalWrite(relayPin, LOW);
+    Serial.print(WaterLevel1);
+    
+    //delay(intervaloraginal);
+  }
 }
 
-// Function to print water level and relay status
-void printStatus() {
-  unsigned long currentMillis = millis();
-
-  // Print water level and relay status every 10 minutes
-  if (currentMillis - previousMillis >= interval) {
-    Serial.print("Water Level: ");
-    Serial.print(waterLevel);
-    Serial.print(" inches | Relay Status: ");
-    Serial.println(digitalRead(relayPin) == HIGH ? "ON" : "OFF");
-
-    // Update the last time the values were printed
-    previousMillis = currentMillis;
-  }
-  Serial.print(" ------------Compleate---------------------");
-  Serial.println();
-  Serial.println();
+long microsecondsToInches(long microseconds) {
+   return microseconds / 74 / 2;
 }
 
-// Function to delay with countdown
-void delayWithCountdown(unsigned long delayTime) {
-  Serial.print("Waiting: ");
-  for (int i = delayTime / 1000; i > 0; i--) {
-    Serial.print(i);
-    Serial.print("s ");
-    delay(1000);
-  }
-  Serial.println();
-}
