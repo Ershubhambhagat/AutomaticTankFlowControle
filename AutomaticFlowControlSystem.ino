@@ -5,9 +5,9 @@ const int relayPin = 8; //
 const int ledPins[] = {7, 6, 3,9,11};
 const int numLeds = sizeof(ledPins) / sizeof(int);
 
-const long WaitForIncreaseWater =50000;  //5 sec  
+const long WaitForIncreaseWater =300000;  //5 sec  
 const long intervaloraginal = 300;      // 3 sec in milliseconds
-const long DeepSleep = 300;  
+const long DeepSleep = 3000000;  
 const int OnMotor15 = 15;   // 15 FirstWaterLableCheck
 const int OffMotor10 = 10;  // 80 FirstWaterLableCheck
 const int SensorNotWorking35 = 35;
