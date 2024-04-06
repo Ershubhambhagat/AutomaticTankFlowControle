@@ -37,12 +37,26 @@ void loop() {
    //delay(500);
   if ( 10 >=WaterLevel1)// 10==>11
   {
+     //Light Chesser
+    
+      for (int i    = 0; i < numLeds; i++) {
+    digitalWrite(ledPins[i], HIGH);
+    delay(250); // Wait for 250 milliseconds
+    digitalWrite(ledPins[i], LOW);
+  }
+   for (int i = numLeds - 1; i >= 0; i--) {
+    digitalWrite(ledPins[i], HIGH);
+    delay(250); // Wait for 250 milliseconds
+    digitalWrite(ledPins[i], LOW);
+  }
+  //Light Chesser end  
     digitalWrite(ledPins[3], HIGH);
     digitalWrite(relayPin, LOW);
     Serial.print("Relay OFF water is already 10 inch" );
     Serial.println();
     Serial.print("Now Lable is :"+WaterLevel1 );
     Serial.println();
+    
   }
  else if (WaterLevel1 >=SensorNotWorking35) ///36>=35
   {
@@ -63,12 +77,8 @@ void loop() {
     delay(250); // Wait for 250 milliseconds
     digitalWrite(ledPins[i], LOW);
   }
-   for (int i = numLeds - 1; i >= 0; i--) {
-    digitalWrite(ledPins[i], HIGH);
-    delay(250); // Wait for 250 milliseconds
-    digitalWrite(ledPins[i], LOW);
-  }
-  //Light Chesser
+  
+  //Light Chesser end
     long duration,WaterCheckAfterMin;
     digitalWrite(relayPin, HIGH);
     Serial.print("Relay On" );
@@ -123,12 +133,8 @@ void loop() {
     delay(250); // Wait for 250 milliseconds
     digitalWrite(ledPins[i], LOW);
   }
-   for (int i = numLeds - 1; i >= 0; i--) {
-    digitalWrite(ledPins[i], HIGH);
-    delay(250); // Wait for 250 milliseconds
-    digitalWrite(ledPins[i], LOW);
-  }
-  //Light Chesser
+
+  //Light Chesser end
       pinMode(pingPin, OUTPUT);
       delayMicroseconds(2);
       digitalWrite(pingPin, HIGH);
