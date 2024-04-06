@@ -1,6 +1,6 @@
-# AutomaticTankFlowControle
+# Automatic Tank Flow Controle
 
-# Arduino Uno Automation Project
+
 
 ## Problem Statement
 The automation system is designed to address the common issue where individuals either do not want to manually switch the motor on/off or tend to forget to turn off the motor after use. The goal is to create a reliable system that can manage the motor's operation autonomously, ensuring that it turns on when needed and, more importantly, turns off when not in use to prevent wastage of electricity and potential safety hazards.
@@ -38,7 +38,7 @@ This automation project aims to simplify tasks by using sensor data to control a
 
 
 
-Code Discription
+#Code Discription
 
 
 
