@@ -2,7 +2,7 @@ const int pingPin = 2; // Trigger Pin of Ultrasonic Sensor
 const int echoPin = 5;// Echo Pin of Ultrasonic Sensor
 const int relayPin = 8; //
 // Define the LED pins
-const int ledPins[] = {7, 6, 3,9,11};
+const int ledPins[] = { 3, 6,7,9,10,11};
 const int numLeds = sizeof(ledPins) / sizeof(int);
 
 const long WaitForIncreaseWater =300000;  //5 sec  
@@ -50,7 +50,7 @@ void loop() {
     digitalWrite(ledPins[i], LOW);
   }
   //Light Chesser end  
-    digitalWrite(ledPins[3], HIGH);
+    digitalWrite(ledPins[5], HIGH);
     digitalWrite(relayPin, LOW);
     Serial.print("Relay OFF water is already 10 inch" );
     Serial.println();
@@ -62,7 +62,7 @@ void loop() {
   {
     Serial.println("Sensor Not Working");
     Serial.println();
-    digitalWrite(ledPins[3], HIGH);
+    digitalWrite(ledPins[5], HIGH);
      digitalWrite(relayPin, LOW);
     Serial.print("Going To Deep Sleep");
     Serial.println();
@@ -87,7 +87,7 @@ void loop() {
     Serial.println();
     Serial.print("Checkig for 5 Min ...... " );
     Serial.println();
-    digitalWrite(ledPins[4], HIGH);
+    
 
     delay(WaitForIncreaseWater);//WaitForIncreaseWater
 
@@ -105,13 +105,12 @@ void loop() {
    Serial.print(WaterCheckAfterMin);
     Serial.println();
    //delay(100);
-    digitalWrite(ledPins[4], LOW);
-
+   
    if (WaterCheckAfterMin >= WaterLevel1)//21>=22
    {
     Serial.print("Water not Increase after Min ");
     Serial.println();
-    digitalWrite(ledPins[3], HIGH);
+    digitalWrite(ledPins[5], HIGH);
 
      digitalWrite(relayPin, LOW);
     Serial.print("Motor Off Please ");
@@ -156,7 +155,7 @@ void loop() {
   {
     Serial.print("Else ..........");
     Serial.println();
-    digitalWrite(ledPins[3], HIGH);
+    digitalWrite(ledPins[5], HIGH);
 
     Serial.print("Tank is Full or Water Not Increase:= ");
     Serial.println();
@@ -167,4 +166,4 @@ void loop() {
 }
 long microsecondsToInches(long microseconds) {
    return microseconds / 74 / 2;
-}
+}  
